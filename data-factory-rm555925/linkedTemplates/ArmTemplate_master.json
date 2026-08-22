@@ -1,0 +1,77 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nome do Data Factory",
+			"defaultValue": "data-factory-rm555925"
+		},
+		"bancodedadosql_password": {
+			"type": "secureString",
+			"metadata": "Cadeia de caracteres segura para 'password' de 'bancodedadosql'"
+		},
+		"dadosbrutos_bronze_connectionString": {
+			"type": "secureString",
+			"metadata": "Cadeia de caracteres segura para 'connectionString' de 'dadosbrutos_bronze'"
+		},
+		"bancodedadosql_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "rm555295-dw.database.windows.net"
+		},
+		"bancodedadosql_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "free-sql-db-6138434"
+		},
+		"bancodedadosql_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "admin-rm555295"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI para a conta de armazenamento contendo os modelos do ARM vinculados"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Token SAS para a conta de armazenamento contendo modelos do ARM vinculados"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "data-factory-rm555925_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"bancodedadosql_password": {
+						"value": "[parameters('bancodedadosql_password')]"
+					},
+					"dadosbrutos_bronze_connectionString": {
+						"value": "[parameters('dadosbrutos_bronze_connectionString')]"
+					},
+					"bancodedadosql_properties_typeProperties_server": {
+						"value": "[parameters('bancodedadosql_properties_typeProperties_server')]"
+					},
+					"bancodedadosql_properties_typeProperties_database": {
+						"value": "[parameters('bancodedadosql_properties_typeProperties_database')]"
+					},
+					"bancodedadosql_properties_typeProperties_userName": {
+						"value": "[parameters('bancodedadosql_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

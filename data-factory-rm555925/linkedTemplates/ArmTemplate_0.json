@@ -1,0 +1,311 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nome do Data Factory",
+			"defaultValue": "data-factory-rm555925"
+		},
+		"bancodedadosql_password": {
+			"type": "secureString",
+			"metadata": "Cadeia de caracteres segura para 'password' de 'bancodedadosql'"
+		},
+		"dadosbrutos_bronze_connectionString": {
+			"type": "secureString",
+			"metadata": "Cadeia de caracteres segura para 'connectionString' de 'dadosbrutos_bronze'"
+		},
+		"bancodedadosql_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "rm555295-dw.database.windows.net"
+		},
+		"bancodedadosql_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "free-sql-db-6138434"
+		},
+		"bancodedadosql_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "admin-rm555295"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/bancodedadosql')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "SQL SERVER CRIADO PARA AULA DE DW ",
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('bancodedadosql_properties_typeProperties_server')]",
+					"database": "[parameters('bancodedadosql_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('bancodedadosql_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('bancodedadosql_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dadosbrutos_bronze')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('dadosbrutos_bronze_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csv_dados_brutos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "dadosbrutos_bronze",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "cliente_01.csv",
+						"container": "bronze-zone"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "CD_CLIENTE",
+						"type": "String"
+					},
+					{
+						"name": "NM_CLIENTE",
+						"type": "String"
+					},
+					{
+						"name": "DT_NASCIMENTO",
+						"type": "String"
+					},
+					{
+						"name": "NR_TELEFONE",
+						"type": "String"
+					},
+					{
+						"name": "DS_EMAIL",
+						"type": "String"
+					},
+					{
+						"name": "NR_ESTRELAS",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/dadosbrutos_bronze')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_rm555295')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bancodedadosql",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "IdCliente",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Nome",
+						"type": "varchar"
+					},
+					{
+						"name": "Email",
+						"type": "varchar"
+					},
+					{
+						"name": "Cidade",
+						"type": "varchar"
+					},
+					{
+						"name": "Estado",
+						"type": "char"
+					},
+					{
+						"name": "DataCadastro",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Clientes"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/bancodedadosql')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/meu_primeiro_df')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "csv_dados_brutos",
+								"type": "DatasetReference"
+							},
+							"name": "csvclientes"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_rm555295",
+								"type": "DatasetReference"
+							},
+							"name": "dwcliente"
+						}
+					],
+					"transformations": [
+						{
+							"name": "conversao"
+						},
+						{
+							"name": "NRSTRELASDES",
+							"description": "ALTER TABLE \nADD NR_ESTRELAS_DES VARCHAR(20);"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          CD_CLIENTE as string,",
+						"          NM_CLIENTE as string,",
+						"          DT_NASCIMENTO as string,",
+						"          NR_TELEFONE as string,",
+						"          DS_EMAIL as string,",
+						"          NR_ESTRELAS as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> csvclientes",
+						"csvclientes cast(output(",
+						"          CD_CLIENTE as integer,",
+						"          NM_CLIENTE as string,",
+						"          DT_NASCIMENTO as date 'dd/MM/yyyy',",
+						"          NR_TELEFONE as string,",
+						"          DS_EMAIL as string,",
+						"          NR_ESTRELAS as short",
+						"     ),",
+						"     errors: true) ~> conversao",
+						"conversao derive(NR_ESTRELAS_DES = iif(NR_ESTRELAS >= 5, 'Excelente',\r",
+						"    iif(NR_ESTRELAS == 4, 'Muito Bom',\r",
+						"        iif(NR_ESTRELAS == 3, 'Bom',\r",
+						"            iif(NR_ESTRELAS == 2, 'Regular',\r",
+						"                'Ruim'\r",
+						"            )\r",
+						"        )\r",
+						"    )\r",
+						")) ~> NRSTRELASDES",
+						"NRSTRELASDES sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          IdCliente as integer,",
+						"          Nome as string,",
+						"          Email as string,",
+						"          Cidade as string,",
+						"          Estado as string,",
+						"          DataCadastro as timestamp",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> dwcliente"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/csv_dados_brutos')]",
+				"[concat(variables('factoryId'), '/datasets/dw_rm555295')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "meu_primeiro_df",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "meu_primeiro_df",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"csvclientes": {},
+									"dwcliente": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2026-08-21T23:31:35Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/meu_primeiro_df')]"
+			]
+		}
+	]
+}
