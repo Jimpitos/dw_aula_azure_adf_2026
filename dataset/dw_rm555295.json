@@ -1,0 +1,44 @@
+{
+	"name": "dw_rm555295",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "bancodedadosql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "IdCliente",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Nome",
+				"type": "varchar"
+			},
+			{
+				"name": "Email",
+				"type": "varchar"
+			},
+			{
+				"name": "Cidade",
+				"type": "varchar"
+			},
+			{
+				"name": "Estado",
+				"type": "char"
+			},
+			{
+				"name": "DataCadastro",
+				"type": "datetime2",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Clientes"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

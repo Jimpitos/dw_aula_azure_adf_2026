@@ -1,0 +1,49 @@
+{
+	"name": "csv_dados_brutos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dadosbrutos_bronze",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "cliente_01.csv",
+				"container": "bronze-zone"
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "CD_CLIENTE",
+				"type": "String"
+			},
+			{
+				"name": "NM_CLIENTE",
+				"type": "String"
+			},
+			{
+				"name": "DT_NASCIMENTO",
+				"type": "String"
+			},
+			{
+				"name": "NR_TELEFONE",
+				"type": "String"
+			},
+			{
+				"name": "DS_EMAIL",
+				"type": "String"
+			},
+			{
+				"name": "NR_ESTRELAS",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

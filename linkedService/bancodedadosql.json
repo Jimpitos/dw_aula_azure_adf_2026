@@ -1,0 +1,18 @@
+{
+	"name": "bancodedadosql",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "SQL SERVER CRIADO PARA AULA DE DW ",
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "rm555295-dw.database.windows.net",
+			"database": "free-sql-db-6138434",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "admin-rm555295",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEVDRUU4REM0LTcwMTItNDk5Ny04QTdBLUJEOTA0REUwQ0RCOF9hNjhkMDliYy1kZjliLTQwOWItYjZkNS02ZmU4MzFlNmE3NzQiDQp9"
+		}
+	}
+}

@@ -1,0 +1,85 @@
+{
+	"name": "meu_primeiro_df",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "csv_dados_brutos",
+						"type": "DatasetReference"
+					},
+					"name": "csvclientes"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_rm555295",
+						"type": "DatasetReference"
+					},
+					"name": "dwcliente"
+				}
+			],
+			"transformations": [
+				{
+					"name": "conversao"
+				},
+				{
+					"name": "NRSTRELASDES",
+					"description": "ALTER TABLE \nADD NR_ESTRELAS_DES VARCHAR(20);"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CD_CLIENTE as string,",
+				"          NM_CLIENTE as string,",
+				"          DT_NASCIMENTO as string,",
+				"          NR_TELEFONE as string,",
+				"          DS_EMAIL as string,",
+				"          NR_ESTRELAS as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> csvclientes",
+				"csvclientes cast(output(",
+				"          CD_CLIENTE as integer,",
+				"          NM_CLIENTE as string,",
+				"          DT_NASCIMENTO as date 'dd/MM/yyyy',",
+				"          NR_TELEFONE as string,",
+				"          DS_EMAIL as string,",
+				"          NR_ESTRELAS as short",
+				"     ),",
+				"     errors: true) ~> conversao",
+				"conversao derive(NR_ESTRELAS_DES = iif(NR_ESTRELAS >= 5, 'Excelente',\r",
+				"    iif(NR_ESTRELAS == 4, 'Muito Bom',\r",
+				"        iif(NR_ESTRELAS == 3, 'Bom',\r",
+				"            iif(NR_ESTRELAS == 2, 'Regular',\r",
+				"                'Ruim'\r",
+				"            )\r",
+				"        )\r",
+				"    )\r",
+				")) ~> NRSTRELASDES",
+				"NRSTRELASDES sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          IdCliente as integer,",
+				"          Nome as string,",
+				"          Email as string,",
+				"          Cidade as string,",
+				"          Estado as string,",
+				"          DataCadastro as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> dwcliente"
+			]
+		}
+	}
+}
