@@ -1,0 +1,30 @@
+{
+	"name": "ORCL_generico",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ORCL_fiap",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pSchema": {
+				"type": "string"
+			},
+			"pTabela": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "OracleTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().pSchema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().pTabela",
+				"type": "Expression"
+			}
+		}
+	}
+}

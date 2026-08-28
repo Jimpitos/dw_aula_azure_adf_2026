@@ -1,0 +1,124 @@
+{
+	"name": "TEMPLATE_ORA_DW",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.pConfiTabelas",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "CP_EL_ORA_SQL",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "OracleSource",
+									"partitionOption": "None",
+									"numberPrecision": 38,
+									"numberScale": 18,
+									"queryTimeout": "02:00:00"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ORCL_generico",
+									"type": "DatasetReference",
+									"parameters": {
+										"pSchema": {
+											"value": "@item().schema_origem",
+											"type": "Expression"
+										},
+										"pTabela": {
+											"value": "@item().tabela_origem",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_DW_GENERICO",
+									"type": "DatasetReference",
+									"parameters": {
+										"pSchema": {
+											"value": "@item().schema_destino",
+											"type": "Expression"
+										},
+										"pTabela": {
+											"value": "@item().tabela_destino",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"pConfiTabelas": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"schema_origem": "DBURGER",
+						"tabela_origem": "DB_BAIRRO",
+						"schema_destino": "dbo",
+						"tabela_destino": "stg_bairro"
+					},
+					{
+						"schema_origem": "DBURGER",
+						"tabela_origem": "DB_LOJA",
+						"schema_destino": "dbo",
+						"tabela_destino": "stg_loja"
+					},
+					{
+						"schema_origem": "DBURGER",
+						"tabela_origem": "DB_CIDADE",
+						"schema_destino": "dbo",
+						"tabela_destino": "stg_cidade"
+					},
+					{
+						"schema_origem": "DBURGER",
+						"tabela_origem": "DB_CLIENTE",
+						"schema_destino": "dbo",
+						"tabela_destino": "stg_cliente"
+					}
+				]
+			}
+		},
+		"annotations": []
+	}
+}

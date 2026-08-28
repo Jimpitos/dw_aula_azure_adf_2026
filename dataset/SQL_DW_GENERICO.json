@@ -1,0 +1,30 @@
+{
+	"name": "SQL_DW_GENERICO",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "bancodedadosql",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pSchema": {
+				"type": "string"
+			},
+			"pTabela": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().pSchema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().pTabela",
+				"type": "Expression"
+			}
+		}
+	}
+}
