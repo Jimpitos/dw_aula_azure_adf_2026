@@ -1,0 +1,25 @@
+{
+	"name": "df_dim_cliente",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_BLOBL_JSON_RAW",
+						"type": "DatasetReference"
+					},
+					"name": "jsonusers"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> jsonusers"
+			]
+		}
+	}
+}
