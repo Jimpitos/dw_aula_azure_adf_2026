@@ -15,10 +15,11 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"container": {
+				"fileName": {
 					"value": "@dataset().PnomeJson",
 					"type": "Expression"
-				}
+				},
+				"container": "bronzezone"
 			}
 		},
 		"schema": {}
