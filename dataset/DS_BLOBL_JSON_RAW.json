@@ -15,7 +15,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "users.jon",
+				"folderPath": "users.json",
 				"container": "bronzezone"
 			}
 		},
