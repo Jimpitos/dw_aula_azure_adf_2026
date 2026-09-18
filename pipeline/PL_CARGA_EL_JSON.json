@@ -53,6 +53,110 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "cp_products",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_REST_DUMMYJSON",
+						"type": "DatasetReference",
+						"parameters": {
+							"Purlrelativa": "products?limit=0&select=id,title,category,brand,price  "
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_BLOBL_JSON_RAW",
+						"type": "DatasetReference",
+						"parameters": {
+							"PnomeJson": "products.json"
+						}
+					}
+				]
+			},
+			{
+				"name": "cp_carts",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "RestSource",
+						"httpRequestTimeout": "00:01:40",
+						"requestInterval": "00.00:00:00.010",
+						"requestMethod": "GET",
+						"paginationRules": {
+							"supportRFC5988": "true"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_REST_DUMMYJSON",
+						"type": "DatasetReference",
+						"parameters": {
+							"Purlrelativa": "carts?limit=0"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_BLOBL_JSON_RAW",
+						"type": "DatasetReference",
+						"parameters": {
+							"PnomeJson": "carts.json"
+						}
+					}
+				]
 			}
 		],
 		"annotations": []
