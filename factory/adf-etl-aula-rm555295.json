@@ -1,0 +1,15 @@
+{
+	"name": "adf-etl-aula-rm555295",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "3f710418-df06-4a93-be0c-b46855cbee7e",
+		"tenantId": "11dbbfe2-89b8-4549-be10-cec364e59551"
+	}
+}
