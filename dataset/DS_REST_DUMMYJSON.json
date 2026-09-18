@@ -1,0 +1,23 @@
+{
+	"name": "DS_REST_DUMMYJSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_DUMMYJSON",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Purlrelativa": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@dataset().Purlrelativa",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	}
+}
