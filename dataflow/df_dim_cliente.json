@@ -18,7 +18,9 @@
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine') ~> jsonusers"
+				"     partitionRootPath: 'users.json',",
+				"     documentForm: 'documentPerLine',",
+				"     wildcardPaths:['bronzezone']) ~> jsonusers"
 			]
 		}
 	}
