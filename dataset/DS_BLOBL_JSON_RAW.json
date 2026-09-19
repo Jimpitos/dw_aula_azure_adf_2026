@@ -8,6 +8,9 @@
 		"parameters": {
 			"PnomeJson": {
 				"type": "String"
+			},
+			"Pconteiner": {
+				"type": "string"
 			}
 		},
 		"annotations": [],

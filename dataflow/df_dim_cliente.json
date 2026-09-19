@@ -12,15 +12,82 @@
 					"name": "jsonusers"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_rm555295",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				}
+			],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          limit as short,",
+				"          skip as boolean,",
+				"          total as short,",
+				"          users as (address as (address as string, city as string, coordinates as (lat as double, lng as double), country as string, postalCode as integer, state as string, stateCode as string), email as string, firstName as string, gender as string, id as short, lastName as string)[]",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     partitionRootPath: 'users.json',",
-				"     documentForm: 'documentPerLine',",
-				"     wildcardPaths:['bronzezone']) ~> jsonusers"
+				"     documentForm: 'documentPerLine') ~> jsonusers",
+				"jsonusers foldDown(unroll(users),",
+				"     mapColumn(",
+				"          email = users.email,",
+				"          nome = users.firstName,",
+				"          sobrenome = users.lastName,",
+				"          genero = users.gender,",
+				"          id_cliente = users.id,",
+				"          cidade = users.address.city,",
+				"          pais = users.address.country,",
+				"          estado = users.address.state",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"select1 derive(nome = concat(nome,' ', sobrenome)) ~> derivedColumn1",
+				"flatten1 select(mapColumn(",
+				"          email,",
+				"          nome,",
+				"          sobrenome,",
+				"          genero,",
+				"          id_cliente,",
+				"          cidade,",
+				"          pais,",
+				"          estado",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          IdCliente as integer,",
+				"          Nome as string,",
+				"          Email as string,",
+				"          Cidade as string,",
+				"          Estado as string,",
+				"          DataCadastro as timestamp",
+				"     ),",
+				"     deletable:true,",
+				"     insertable:true,",
+				"     updateable:true,",
+				"     upsertable:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
