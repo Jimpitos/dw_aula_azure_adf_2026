@@ -9,30 +9,38 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
-				"name": "IdCliente",
+				"name": "CD_CLIENTE",
 				"type": "int",
 				"precision": 10
 			},
 			{
-				"name": "Nome",
+				"name": "NM_CLIENTE",
 				"type": "varchar"
 			},
 			{
-				"name": "Email",
+				"name": "DT_NASCIMENTO",
+				"type": "date"
+			},
+			{
+				"name": "NR_TELEFONE",
 				"type": "varchar"
 			},
 			{
-				"name": "Cidade",
+				"name": "DS_EMAIL",
 				"type": "varchar"
 			},
 			{
-				"name": "Estado",
-				"type": "char"
+				"name": "NR_ESTRELAS",
+				"type": "tinyint",
+				"precision": 3
 			},
 			{
-				"name": "DataCadastro",
-				"type": "datetime2",
-				"scale": 7
+				"name": "NR_ESTRELAS_DES",
+				"type": "varchar"
+			},
+			{
+				"name": "RM",
+				"type": "varchar"
 			}
 		],
 		"typeProperties": {

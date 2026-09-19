@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "dw_rm555295",
+						"referenceName": "freesql",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -72,22 +72,34 @@
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
-				"          IdCliente as integer,",
-				"          Nome as string,",
-				"          Email as string,",
-				"          Cidade as string,",
-				"          Estado as string,",
-				"          DataCadastro as timestamp",
+				"          CLIENTE_SK as integer,",
+				"          CLIENTE_ID as integer,",
+				"          NOME as string,",
+				"          EMAIL as string,",
+				"          GENERO as string,",
+				"          CIDADE as string,",
+				"          ESTADO as string,",
+				"          PAIS as string",
 				"     ),",
-				"     deletable:true,",
+				"     deletable:false,",
 				"     insertable:true,",
-				"     updateable:true,",
-				"     upsertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
 				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
+				"     dateFormat:'dd/MM/yyyy',",
+				"     timestampFormat:'dd/MM/yyyy',",
+				"     booleanFormat: ['1', '0'],",
 				"     saveOrder: 1,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          CLIENTE_ID = id_cliente,",
+				"          NOME = nome,",
+				"          EMAIL = email,",
+				"          GENERO = genero,",
+				"          CIDADE = cidade,",
+				"          ESTADO = estado,",
+				"          PAIS = pais",
+				"     )) ~> sink1"
 			]
 		}
 	}

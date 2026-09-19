@@ -1,0 +1,51 @@
+{
+	"name": "freesql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "bancodedadosql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "CLIENTE_SK",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CLIENTE_ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "NOME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EMAIL",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GENERO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CIDADE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ESTADO",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PAIS",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DIM_CLIENTE"
+		}
+	}
+}
