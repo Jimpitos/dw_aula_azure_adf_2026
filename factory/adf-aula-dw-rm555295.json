@@ -1,0 +1,15 @@
+{
+	"name": "adf-aula-dw-rm555295",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "5ba61d45-293b-412c-be9e-c7d141ee31f0",
+		"tenantId": "11dbbfe2-89b8-4549-be10-cec364e59551"
+	}
+}
